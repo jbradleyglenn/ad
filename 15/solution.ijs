@@ -1,25 +1,28 @@
+9 !: 37 ] 0 100 0 20
+
 read =: 1 !: 1 @ <
 lines =: LF splitstring read
 keep =: {{ (y e. x) } ' ' ,: y }} 
 nums =: _ ". '0123456789' & keep 
+words =: 'abcdefghijklmnopqrstuvwxyz' & keep
 NB. 1a
-a1 =: +/ 1 _1 +/ . * '()' =/ read 'in1.txt'
+a1 =: +/ 1 _1 +/ . * '()' =/ read 'i1.txt'
 NB. 1b
-b1 =: >: _1 i.~ +/\ 1 _1 +/ . * '()' =/ read 'in1.txt'
+b1 =: >: _1 i.~ +/\ 1 _1 +/ . * '()' =/ read 'i1.txt'
 NB. 2a
-sizes =: _3 [\ nums read 'in2.txt'
+sizes =: _3 [\ nums read 'i2.txt'
 +/ , (+: , <./) 2 */\ (, {.) |: sizes
 NB. 2b
 vol =: */
 circ =: +:@:(+/ - >./)
 +/ (circ + vol) |: sizes
 NB. 3a 
-# ~. +/\ 0j0 , 0j1 ^ '^>v<'i. read 'in3.txt'
+# ~. +/\ 0j0 , 0j1 ^ '^>v<'i. read 'i3.txt'
 NB. 3b
-# ~. , +/\ 0 0 , _ 2 $ 0j1 ^ '^>v<'i. read 'in3.txt'
+# ~. , +/\ 0 0 , _ 2 $ 0j1 ^ '^>v<'i. read 'i3.txt'
 NB. 4a
 NB. load'~addons/convert/misc/md5.ijs'
-NB. key =: read 'in4.txt'
+NB. key =: read 'i4.txt'
 NB. '00000' i.~ 5&{."1 key {{ md5 x , ": y }}"(_ 0) i. 1000000
 NB. 4b
 NB. {{
@@ -35,8 +38,40 @@ NB. 5a
 c1 =: 3 <: [: +/ e.&'aeiou'
 c2 =: 1 e. (= |.!.' ')
 c3 =: 1 e. ('ab' , 'cd' , 'pq' ,: 'xy') e. 2&(]\)
-+/ (c1 *. c2 *. -.@:c3)"1 > lines 'in5.txt'
++/ (c1 *. c2 *. -.@:c3)"1 > lines 'i5.txt'
 NB. 5b 
 c1 =: 1 e. 2 <: [: ({: - {.)@I. [: -:"1/~ 2&(]\)
 c2 =: 1 e. [: (-: |.)"(1) 3&(]\)
-+/ (c1 *. c2)"1 > lines 'in5.txt'
++/ (c1 *. c2)"1 > lines 'i5.txt'
+NB. 6a
+irng =: {{ x + i. >: y - x }}
+insts =: ( (1 i.~ (1 e. 'tog'&E.), (1 e. 'off'&E.) , (1 e. 'on'&E.)), nums )&> lines 'i6.txt'
+lights =: 1000 1000 $ 0
+{{
+    sel =: < (irng/ 1 3 { y);(irng/ 2 4 { y)
+    fn =: 1:`0:`-.@.({. y)
+    lights =: fn &. (sel & {) lights
+}}"1 insts
++/ , lights
+NB. 6b
+lights =: 1000 1000 $ 0
+{{
+    sel =: < (irng/ 1 3 { y);(irng/ 2 4 { y)
+    fn =: >:`{{0 >. <: y}}`(2&+) @. ({. y)
+    lights =: fn &. (sel & {) lights
+}}"1 insts
++/ , lights
+NB. 7a
+NB. idea: topo sort, then eval
+NB. ;: L: 0 '->'&splitstring&> lines 't7'
+LC =: 'abcdefghijklmnopqrstuvwxyz'
+'`NOT OR AND LSHIFT RSHIFT' =: (65535&-)`(23 b.)`(17 b.)`(65535 (17 b.) (33 b.)~)`(33 b.~ -)
+I =: < @ ;: ;. _2 read 'i7'
+nm =: (# ~ e. & LC @ {. @ >)&.> I
+NB.          v c v a   v v v  c v  c  n a c  v  c v c v    v a v    v-------------  n
+toponm =: (((; @ # ~) ([ , $: @(-. L: 1 ~)^:(*. & * & #)) (# ~ -.)) 1 & >: @ # @ >) nm
+NB. this is a 7-train
+NB. v  c  v  c  n   v  v n    v n  c v 
+([: ". @ (;: ^: _1) {: , '=:' ; _3 & }.) @ > I /: toponm i. {: @ > I
+a
+
