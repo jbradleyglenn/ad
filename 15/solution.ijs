@@ -1,9 +1,10 @@
 9 !: 37 ] 0 100 0 20
+require 'convert/json'
 
 read =: 1 !: 1 @ <
 lines =: LF splitstring read
 keep =: {{ (y e. x) } ' ' ,: y }} 
-nums =: _ ". '0123456789' & keep 
+nums =: _ ". '_-0123456789' & keep 
 words =: 'abcdefghijklmnopqrstuvwxyz' & keep
 NB. 1a
 a1 =: +/ 1 _1 +/ . * '()' =/ read 'i1.txt'
@@ -74,4 +75,30 @@ NB. this is a 7-train
 NB. v  c  v  c  n   v  v n    v n  c v 
 ([: ". @ (;: ^: _1) {: , '=:' ; _3 & }.) @ > I /: toponm i. {: @ > I
 a
-
+NB. part b
+b =: 956
+([: ". @ (;: ^: _1) {: , '=:' ; _3 & }.) @ > 2 }. I /: toponm i. {: @ > I
+NB. problem 8
++/ ((> / \. &. |. @ ('\'&=)) (2 + +/@[ + 2 * +/@:*.) '\x'&E.) @ > < ;. _2 read 'i8'
+NB. part b
++/ (2 + +/ @ (e.&'\"')) @ > < ;. _2 read 'i8'
+NB. 9a
+i =: (+ |:) 0 ,~ 0 ,. |."1 |.@:((0&".)@>) /. / |: (0 _1&{) @ ;: ;. _2 read 'i9'
+<./ (i.@! +/@(i (<"1@[ { ])~ 2 ]\ A.)"0 _ i.) # i
+NB. 9b
+>./ (i.@! +/@(i (<"1@[ { ])~ 2 ]\ A.)"0 _ i.) # i
+NB. 10a
+# ,@((# , {.) ;. 1 ~ (~: |. !. 0)) ^: 40 ". " 0 '1113122113'
+NB. 10b
+# ,@((# , {.) ;. 1 ~ (~: |. !. 0)) ^: 50 ". " 0 '1113122113'
+NB. 11ab
+lo =: 'abcdefghijklmnopqrstuvwxyz'
+c1 =: [: -. 1 e. e.&8 14 11
+c2 =: (1 < 1 (i: - i.)~ 2 =/\ ])
+c3 =: (1 e. 1 1 E. 2 -~/\ ])
+inc =: >:&.(26&#.)
+lo {~ inc^:(-.@(c1 *. c2 *. c3))^:_ inc lo i. 'cqjxjnds'
+lo {~ inc^:(-.@(c1 *. c2 *. c3))^:_ inc lo i. 'cqjxxyzz'
+NB. 12ab
++/ nums read 'i12'
++/ nums enc_json ]`( ($:&.>)`]@.(2 = 3!:0) )`( ($: L: _1)`('censored'"_)@.((<'red') e. {:) )@.(#@$) dec_json read 'i12'
